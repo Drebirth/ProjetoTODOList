@@ -1,0 +1,524 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODO List — Foco</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#C05621',
+        'on-primary': '#FFFFFF',
+        'primary-container': '#FEEBC8',
+        'on-primary-container': '#7B341E',
+        'secondary': '#C53030',
+        'on-secondary': '#FFFFFF',
+        'secondary-container': '#FED7D7',
+        'on-secondary-container': '#742A2A',
+        'terracota': '#C05621',
+        'vermelho': '#C53030',
+        'success': '#2F855A',
+        'on-success': '#FFFFFF',
+        'warning': '#DD6B20',
+        'on-warning': '#252525',
+        'light-surface': '#FFFFFF',
+        'light-on-surface': '#1A202C',
+        'light-surface-variant': '#F7FAFC',
+        'light-on-surface-variant': '#4A5568',
+        'light-outline': '#E2E8F0',
+        'light-outline-focus': '#CBD5E0',
+        'dark-surface': '#1A202C',
+        'dark-on-surface': '#F7FAFC',
+        'dark-surface-variant': '#2D3748',
+        'dark-on-surface-variant': '#E2E8F0',
+        'dark-outline': '#4A5568',
+        'dark-outline-focus': '#718096',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '10px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '20px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '16px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'title': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'label': ['"Inter"', 'sans-serif'],
+      },
+      fontSize: {
+        'display-lg': ['40px', { lineHeight: '48px', letterSpacing: '-0.5px', fontWeight: '700' }],
+        'display-lg-mobile': ['28px', { lineHeight: '34px', letterSpacing: '-0.3px', fontWeight: '700' }],
+        'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.4px', fontWeight: '700' }],
+        'headline-lg-mobile': ['24px', { lineHeight: '30px', letterSpacing: '-0.2px', fontWeight: '700' }],
+        'headline-md': ['24px', { lineHeight: '32px', letterSpacing: '-0.2px', fontWeight: '600' }],
+        'headline-md-mobile': ['20px', { lineHeight: '26px', letterSpacing: '-0.1px', fontWeight: '600' }],
+        'title-lg': ['18px', { lineHeight: '24px', fontWeight: '600' }],
+        'title-md': ['16px', { lineHeight: '22px', fontWeight: '600' }],
+        'body-lg': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+        'body-md': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+        'label-lg': ['14px', { lineHeight: '20px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+        'label-sm': ['11px', { lineHeight: '14px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '150ms',
+        'surface-enter': '250ms',
+        'surface-exit': '180ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'surface-exit': 'cubic-bezier(0.4, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-light-surface-variant text-light-on-surface font-body min-h-[1024px] flex antialiased" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+  <!-- BARRA LATERAL (DESKTOP) -->
+  <aside class="w-72 bg-light-surface border-r border-light-outline flex flex-col justify-between p-6 shrink-0 min-h-[1024px]" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <div class="flex flex-col gap-8">
+      <!-- Marca / Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+          <span class="material-symbols-outlined text-2xl">check_box</span>
+        </div>
+        <div>
+          <span class="font-headline text-headline-md tracking-tight text-light-on-surface">Foco</span>
+          <span class="block text-xs font-label uppercase tracking-wider text-primary font-semibold">Tarefas &amp; Metas</span>
+        </div>
+      </div>
+
+      <!-- Botão de Criação Rápida -->
+      <button type="button" id="btn-open-create-desktop" class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-md bg-primary hover:bg-on-primary-container text-on-primary font-label text-label-lg shadow-sm transition-all duration-state-change group">
+        <span class="material-symbols-outlined text-xl transition-transform group-hover:rotate-90 duration-state-change">add</span>
+        <span>Nova Tarefa</span>
+      </button>
+
+      <!-- Menus de Navegação -->
+      <nav class="flex flex-col gap-1">
+        <span class="text-xs font-semibold uppercase tracking-wider text-light-on-surface-variant px-3 mb-1">Visualizações</span>
+        
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-md bg-primary-container text-on-primary-container font-label text-label-md transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl fill text-primary">today</span>
+            <span>Hoje</span>
+          </div>
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-light-surface text-primary">5</span>
+        </a>
+
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-md text-light-on-surface hover:bg-light-surface-variant font-label text-label-md transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl text-secondary">priority_high</span>
+            <span>Alta Prioridade</span>
+          </div>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container">3</span>
+        </a>
+
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-md text-light-on-surface hover:bg-light-surface-variant font-label text-label-md transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl text-light-on-surface-variant">calendar_month</span>
+            <span>Próximas</span>
+          </div>
+          <span class="text-xs text-light-on-surface-variant">8</span>
+        </a>
+
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-md text-light-on-surface hover:bg-light-surface-variant font-label text-label-md transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl text-success">task_alt</span>
+            <span>Concluídas</span>
+          </div>
+          <span class="text-xs text-light-on-surface-variant">14</span>
+        </a>
+      </nav>
+
+      <!-- Categorias / Projetos -->
+      <div class="flex flex-col gap-2 pt-4 border-t border-light-outline">
+        <div class="flex items-center justify-between px-3">
+          <span class="text-xs font-semibold uppercase tracking-wider text-light-on-surface-variant">Listas &amp; Projetos</span>
+          <button type="button" class="text-light-on-surface-variant hover:text-primary p-1">
+            <span class="material-symbols-outlined text-base">add</span>
+          </button>
+        </div>
+        <div class="flex flex-col gap-1">
+          <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-light-on-surface hover:bg-light-surface-variant text-body-md">
+            <span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+            <span>Trabalho &amp; Clientes</span>
+          </a>
+          <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-light-on-surface hover:bg-light-surface-variant text-body-md">
+            <span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+            <span>Estudos &amp; Leitura</span>
+          </a>
+          <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-light-on-surface hover:bg-light-surface-variant text-body-md">
+            <span class="w-2.5 h-2.5 rounded-full bg-light-on-surface-variant"></span>
+            <span>Pessoal &amp; Saúde</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perfil do Usuário / Rodapé -->
+    <div class="pt-4 border-t border-light-outline flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm">
+          FS
+        </div>
+        <div>
+          <p class="text-body-md font-semibold text-light-on-surface leading-tight">Felipe Silva</p>
+          <span class="text-xs text-light-on-surface-variant">felipe@exemplo.com</span>
+        </div>
+      </div>
+      <button type="button" title="Configurações" class="p-2 text-light-on-surface-variant hover:text-light-on-surface rounded-full hover:bg-light-surface-variant">
+        <span class="material-symbols-outlined text-xl">settings</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="flex-1 flex flex-col min-w-0 min-h-[1024px]" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <!-- Topo da Aplicação (Header) -->
+    <header class="h-20 bg-light-surface border-b border-light-outline px-8 flex items-center justify-between shrink-0 sticky top-0 z-10">
+      <!-- Busca Inteligente -->
+      <div class="flex items-center gap-3 flex-1 max-w-lg">
+        <div class="relative w-full">
+          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-light-on-surface-variant text-xl">search</span>
+          <input type="search" id="search-input" placeholder="Buscar tarefas, etiquetas ou datas..." class="w-full pl-11 pr-4 py-2 rounded-full border border-light-outline bg-light-surface-variant text-light-on-surface placeholder:text-light-on-surface-variant/60 focus:bg-light-surface focus:border-primary focus:ring-1 focus:ring-primary text-body-md outline-none transition-all">
+        </div>
+      </div>
+
+      <!-- Ações do Topo -->
+      <div class="flex items-center gap-3">
+        <!-- Indicador de Produtividade Diária -->
+        <div class="hidden lg:flex items-center gap-3 px-4 py-2 rounded-full bg-light-surface-variant border border-light-outline">
+          <span class="material-symbols-outlined text-primary text-lg">local_fire_department</span>
+          <span class="text-body-md font-medium text-light-on-surface"><strong class="text-primary font-bold">4 de 9</strong> concluídas</span>
+          <div class="w-16 h-2 bg-light-outline rounded-full overflow-hidden">
+            <div class="w-4/9 h-full bg-primary rounded-full" style="width: 45%;"></div>
+          </div>
+        </div>
+
+        <button type="button" title="Notificações" class="relative p-2.5 rounded-full text-light-on-surface-variant hover:bg-light-surface-variant hover:text-light-on-surface transition-colors">
+          <span class="material-symbols-outlined text-2xl">notifications</span>
+          <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary"></span>
+        </button>
+
+        <button type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-light-outline text-body-md font-medium text-light-on-surface hover:bg-light-surface-variant transition-colors">
+          <span class="material-symbols-outlined text-lg">tune</span>
+          <span class="hidden sm:inline">Visualização</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Área de Conteúdo / Listagem de Tarefas -->
+    <div class="p-8 max-w-5xl w-full mx-auto flex-1 flex flex-col gap-6">
+
+      <!-- Título da Seção e Métricas Rápidas -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-headline text-headline-lg text-light-on-surface">Hoje</h1>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary-container text-on-primary-container">
+              Sábado, 7 de Novembro
+            </span>
+          </div>
+          <p class="text-body-md text-light-on-surface-variant mt-1">Organize seus objetivos com foco nas prioridades de hoje.</p>
+        </div>
+
+        <!-- Abas de Filtro de Estado -->
+        <div class="flex items-center gap-1 bg-light-surface p-1 rounded-lg border border-light-outline">
+          <button class="px-3.5 py-1.5 rounded-md text-label-md font-label bg-primary text-on-primary shadow-xs">Todas (5)</button>
+          <button class="px-3.5 py-1.5 rounded-md text-label-md font-label text-light-on-surface-variant hover:text-light-on-surface">Pendentes (3)</button>
+          <button class="px-3.5 py-1.5 rounded-md text-label-md font-label text-light-on-surface-variant hover:text-light-on-surface">Concluídas (2)</button>
+        </div>
+      </div>
+
+      <!-- Barra de Inserção Rápida de Tarefa -->
+      <form id="quick-add-form" class="bg-light-surface rounded-xl border border-light-outline p-2 shadow-sm flex items-center gap-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+        <div class="p-2 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">add_circle</span>
+        </div>
+        <input type="text" id="task-input-text" placeholder="Adicionar uma tarefa rápida... (ex: Finalizar protótipo às 15h)" class="flex-1 bg-transparent border-none text-light-on-surface placeholder:text-light-on-surface-variant/60 focus:ring-0 text-body-lg outline-none">
+        <div class="flex items-center gap-2 pr-2">
+          <!-- Botão de Urgência / Prioridade -->
+          <button type="button" id="toggle-urgency-btn" class="p-2 text-light-on-surface-variant hover:text-secondary hover:bg-secondary-container/50 rounded-lg transition-colors" title="Marcar como prioridade alta">
+            <span class="material-symbols-outlined text-xl">flag</span>
+          </button>
+          <!-- Seletor de Data -->
+          <button type="button" class="p-2 text-light-on-surface-variant hover:text-primary hover:bg-primary-container/50 rounded-lg transition-colors" title="Definir prazo">
+            <span class="material-symbols-outlined text-xl">event</span>
+          </button>
+          <!-- Botão Adicionar -->
+          <button type="submit" class="px-4 py-2 rounded-lg bg-primary hover:bg-on-primary-container text-on-primary font-label text-label-md transition-colors shadow-xs flex items-center gap-1.5">
+            <span>Salvar</span>
+            <span class="material-symbols-outlined text-sm">keyboard_return</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Lista de Tarefas -->
+      <div class="flex flex-col gap-3" id="task-list-container">
+
+        <!-- GRUPO: Alta Prioridade (Terracota & Vermelho) -->
+        <div class="flex items-center gap-2 mt-2">
+          <span class="material-symbols-outlined text-secondary text-sm">priority_high</span>
+          <span class="text-label-sm font-semibold uppercase tracking-wider text-secondary">Prioridade Crítica</span>
+          <div class="h-px flex-1 bg-light-outline"></div>
+        </div>
+
+        <!-- Tarefa 1 (Urgente / Terracota / Vermelho) -->
+        <article class="p-4 rounded-xl border border-secondary/30 bg-light-surface hover:shadow-md transition-all flex items-start justify-between gap-4 group">
+          <div class="flex items-start gap-3.5">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-2 border-secondary text-secondary focus:ring-secondary cursor-pointer">
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h3 class="font-title text-title-md text-light-on-surface font-semibold group-hover:text-primary transition-colors">
+                  Revisar entrega da documentação do cliente
+                </h3>
+                <span class="px-2 py-0.5 rounded-full text-xs font-label bg-secondary-container text-on-secondary-container flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                  Urgente
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-xs font-label bg-primary-container text-on-primary-container">
+                  Trabalho
+                </span>
+              </div>
+              <p class="text-body-md text-light-on-surface-variant mt-1">Conferir checklist de requisitos antes da reunião de alinhamento com a diretoria.</p>
+              <div class="flex items-center gap-4 mt-3 text-xs text-light-on-surface-variant">
+                <span class="flex items-center gap-1 font-medium text-secondary">
+                  <span class="material-symbols-outlined text-sm">alarm</span> Hoje às 14:30
+                </span>
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">chat_bubble</span> 3 comentários
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+            <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-primary rounded-lg hover:bg-light-surface-variant" title="Editar">
+              <span class="material-symbols-outlined text-lg">edit</span>
+            </button>
+            <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-secondary rounded-lg hover:bg-secondary-container" title="Excluir">
+              <span class="material-symbols-outlined text-lg">delete</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Tarefa 2 (Terracota) -->
+        <article class="p-4 rounded-xl border border-light-outline bg-light-surface hover:border-primary/50 hover:shadow-md transition-all flex items-start justify-between gap-4 group">
+          <div class="flex items-start gap-3.5">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-2 border-primary text-primary focus:ring-primary cursor-pointer">
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h3 class="font-title text-title-md text-light-on-surface font-semibold group-hover:text-primary transition-colors">
+                  Construir componentes da interface TODO
+                </h3>
+                <span class="px-2 py-0.5 rounded-full text-xs font-label bg-primary-container text-on-primary-container">
+                  Design System
+                </span>
+              </div>
+              <p class="text-body-md text-light-on-surface-variant mt-1">Garantir fidelidade aos tons branco/cinza, vermelho/terracota e responsividade total.</p>
+              <div class="flex items-center gap-4 mt-3 text-xs text-light-on-surface-variant">
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">schedule</span> Hoje às 18:00
+                </span>
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">checklist</span> 4 subtarefas
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+            <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-primary rounded-lg hover:bg-light-surface-variant" title="Editar">
+              <span class="material-symbols-outlined text-lg">edit</span>
+            </button>
+            <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-secondary rounded-lg hover:bg-secondary-container" title="Excluir">
+              <span class="material-symbols-outlined text-lg">delete</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- GRUPO: Tarefas Regulares -->
+        <div class="flex items-center gap-2 mt-4">
+          <span class="material-symbols-outlined text-light-on-surface-variant text-sm">assignment</span>
+          <span class="text-label-sm font-semibold uppercase tracking-wider text-light-on-surface-variant">Rotina &amp; Planejamento</span>
+          <div class="h-px flex-1 bg-light-outline"></div>
+        </div>
+
+        <!-- Tarefa 3 -->
+        <article class="p-4 rounded-xl border border-light-outline bg-light-surface hover:border-light-outline-focus hover:shadow-sm transition-all flex items-start justify-between gap-4 group">
+          <div class="flex items-start gap-3.5">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-2 border-light-outline text-primary focus:ring-primary cursor-pointer">
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h3 class="font-title text-title-md text-light-on-surface font-semibold group-hover:text-primary transition-colors">
+                  Exercícios matinais e hidratação
+                </h3>
+                <span class="px-2 py-0.5 rounded-full text-xs font-label bg-light-surface-variant text-light-on-surface-variant border border-light-outline">
+                  Saúde
+                </span>
+              </div>
+              <div class="flex items-center gap-4 mt-2 text-xs text-light-on-surface-variant">
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">repeat</span> Diário
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+            <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-primary rounded-lg hover:bg-light-surface-variant" title="Editar">
+              <span class="material-symbols-outlined text-lg">edit</span>
+            </button>
+            <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-secondary rounded-lg hover:bg-secondary-container" title="Excluir">
+              <span class="material-symbols-outlined text-lg">delete</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- GRUPO: Concluídas Recentemente -->
+        <div class="flex items-center gap-2 mt-4">
+          <span class="material-symbols-outlined text-success text-sm">check_circle</span>
+          <span class="text-label-sm font-semibold uppercase tracking-wider text-success">Concluídas Hoje (2)</span>
+          <div class="h-px flex-1 bg-light-outline"></div>
+        </div>
+
+        <!-- Tarefa Concluída 1 -->
+        <article class="p-4 rounded-xl border border-light-outline bg-light-surface/60 opacity-70 hover:opacity-100 transition-opacity flex items-start justify-between gap-4">
+          <div class="flex items-start gap-3.5">
+            <input type="checkbox" checked class="mt-1 w-5 h-5 rounded border-2 border-primary text-primary focus:ring-primary cursor-pointer">
+            <div>
+              <h3 class="font-title text-title-md text-light-on-surface line-through">
+                Comprar novo bloco de notas pontilhado
+              </h3>
+              <div class="flex items-center gap-2 mt-1 text-xs text-light-on-surface-variant">
+                <span class="text-success font-medium flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">done</span> Finalizado às 10:15
+                </span>
+                <span>•</span>
+                <span>Pessoal</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-secondary rounded-lg hover:bg-secondary-container">
+            <span class="material-symbols-outlined text-lg">delete</span>
+          </button>
+        </article>
+
+        <!-- Tarefa Concluída 2 -->
+        <article class="p-4 rounded-xl border border-light-outline bg-light-surface/60 opacity-70 hover:opacity-100 transition-opacity flex items-start justify-between gap-4">
+          <div class="flex items-start gap-3.5">
+            <input type="checkbox" checked class="mt-1 w-5 h-5 rounded border-2 border-primary text-primary focus:ring-primary cursor-pointer">
+            <div>
+              <h3 class="font-title text-title-md text-light-on-surface line-through">
+                Atualizar dependências do Tailwind e CSS base
+              </h3>
+              <div class="flex items-center gap-2 mt-1 text-xs text-light-on-surface-variant">
+                <span class="text-success font-medium flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">done</span> Finalizado às 09:30
+                </span>
+                <span>•</span>
+                <span>Desenvolvimento</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-secondary rounded-lg hover:bg-secondary-container">
+            <span class="material-symbols-outlined text-lg">delete</span>
+          </button>
+        </article>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Script simples para interatividade visual na demonstração -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('quick-add-form');
+      const input = document.getElementById('task-input-text');
+      const urgencyBtn = document.getElementById('toggle-urgency-btn');
+      let isUrgent = false;
+
+      urgencyBtn.addEventListener('click', () => {
+        isUrgent = !isUrgent;
+        if (isUrgent) {
+          urgencyBtn.classList.add('text-secondary', 'bg-secondary-container');
+          urgencyBtn.classList.remove('text-light-on-surface-variant');
+        } else {
+          urgencyBtn.classList.remove('text-secondary', 'bg-secondary-container');
+          urgencyBtn.classList.add('text-light-on-surface-variant');
+        }
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+
+        const container = document.getElementById('task-list-container');
+        const newCard = document.createElement('article');
+        newCard.className = `p-4 rounded-xl border ${isUrgent ? 'border-secondary/40' : 'border-light-outline'} bg-light-surface hover:shadow-md transition-all flex items-start justify-between gap-4 group animate-pulse`;
+
+        newCard.innerHTML = `
+          <div class="flex items-start gap-3.5">
+            <input type="checkbox" class="mt-1 w-5 h-5 rounded border-2 ${isUrgent ? 'border-secondary text-secondary' : 'border-primary text-primary'} focus:ring-primary cursor-pointer">
+            <div>
+              <div class="flex items-center gap-2.5 flex-wrap">
+                <h3 class="font-title text-title-md text-light-on-surface font-semibold">${text}</h3>
+                ${isUrgent ? '<span class="px-2 py-0.5 rounded-full text-xs font-label bg-secondary-container text-on-secondary-container">Urgente</span>' : ''}
+                <span class="px-2 py-0.5 rounded-full text-xs font-label bg-primary-container text-on-primary-container">Nova</span>
+              </div>
+              <div class="flex items-center gap-4 mt-2 text-xs text-light-on-surface-variant">
+                <span class="flex items-center gap-1 font-medium text-primary"><span class="material-symbols-outlined text-sm">schedule</span> Criada agora</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="p-1.5 text-light-on-surface-variant hover:text-secondary rounded-lg hover:bg-secondary-container" onclick="this.closest('article').remove()">
+            <span class="material-symbols-outlined text-lg">delete</span>
+          </button>
+        `;
+
+        // Inserir logo após o primeiro grupo
+        container.insertBefore(newCard, container.children[2]);
+        setTimeout(() => newCard.classList.remove('animate-pulse'), 400);
+        input.value = '';
+      });
+    });
+  </script>
+
+
+</body></html>

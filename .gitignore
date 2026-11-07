@@ -1,0 +1,42 @@
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+**/appsettings.Development.json
+**/appsettings.*.local.json
+
+# Artefatos .NET
+**/bin/
+**/obj/
+**/TestResults/
+**/*.user
+**/*.suo
+.vs/
+
+# Dependências e saídas do Angular/Node
+**/node_modules/
+**/dist/
+**/.angular/cache/
+**/coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Bancos SQLite locais
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+# IDEs e sistema operacional
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

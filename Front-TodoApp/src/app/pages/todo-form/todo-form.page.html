@@ -1,0 +1,22 @@
+<main class="min-h-screen px-4 py-6 sm:px-8 sm:py-10">
+  <div class="mx-auto max-w-3xl">
+    <header class="mb-7 flex items-center justify-between"><a class="brand-lockup" routerLink="/todos"><span><strong>Foco</strong><small>Tarefas &amp; Metas</small></span></a><a class="button-secondary" routerLink="/todos">Lista de tarefas</a></header>
+    <section class="rounded-3xl bg-white p-5 shadow-sm sm:p-8">
+      <div class="modal-heading"><div><p class="eyebrow">ORGANIZE SEU PRÓXIMO PASSO</p><h1 class="mt-2 text-2xl font-bold text-slate-900">{{ editingTodo() ? 'Editar tarefa' : 'Nova tarefa' }}</h1></div></div>
+      @if (loading()) { <div class="state-card compact mt-6" role="status">Carregando preferências, categorias e tarefa…</div> }
+      @if (error()) { <p class="error-banner mt-5" role="alert">{{ error() }}</p> }
+      @if (!loading() && (editMode() ? editingTodo() !== null : ready())) {
+        <form class="mt-6" (ngSubmit)="submit()">
+          <label class="field-label" for="title">Título<input id="title" name="title" [(ngModel)]="title" maxlength="200" required class="field-input" placeholder="Dê um título para a tarefa"><span class="field-hint">{{ title.length }}/200 caracteres</span></label>
+          <label class="field-label mt-4" for="description">Descrição<textarea id="description" name="description" [(ngModel)]="description" maxlength="200" required rows="3" class="field-input resize-none" placeholder="Adicione detalhes da tarefa"></textarea><span class="field-hint">{{ description.length }}/200 caracteres</span></label>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2"><label class="field-label" for="todoCategory">Categoria<select id="todoCategory" name="todoCategory" class="field-input" [(ngModel)]="categoryId"><option [ngValue]="null">Sem categoria</option>@for (category of categories(); track category.id) { <option [ngValue]="category.id">{{ category.nome }}</option> }</select></label><label class="field-label" for="priority">Prioridade<select id="priority" name="priority" class="field-input" [(ngModel)]="priority">@for (item of priorities; track item.value) { <option [value]="item.value">{{ item.label }}</option> }</select></label></div>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2"><label class="field-label" for="windowStart">Início da janela (opcional)<input id="windowStart" name="windowStart" type="datetime-local" class="field-input" [(ngModel)]="windowStartLocal"></label><label class="field-label" for="windowEnd">Fim da janela<input id="windowEnd" name="windowEnd" type="datetime-local" class="field-input" [(ngModel)]="windowEndLocal"></label></div><p class="field-hint mt-1">Horários no fuso {{ preference().timeZoneId }}. Informe início e fim juntos.</p>
+          <label class="recurrence-toggle mt-5"><input type="checkbox" name="recurrenceEnabled" [(ngModel)]="recurrenceEnabled"><span><strong>Repetir tarefa</strong><small>Configure uma série recorrente</small></span></label>
+          @if (editingTodo()?.serieRecorrenciaId !== null && editingTodo()?.serieRecorrenciaId !== undefined) { <p class="future-series-note mt-3" role="note">Alterações de título, descrição, categoria, prioridade e recorrência serão aplicadas às ocorrências futuras. Alterar a janela define a âncora #{{ editingTodo()?.numeroOcorrencia }}: novas janelas se aplicam às ocorrências futuras; as já geradas serão mantidas.</p> }
+          @if (recurrenceEnabled) { <div class="mt-4 grid gap-4 sm:grid-cols-2"><label class="field-label" for="frequency">Frequência<select id="frequency" name="frequency" class="field-input" [(ngModel)]="recurrenceFrequency">@for (frequency of frequencies; track frequency.value) { <option [value]="frequency.value">{{ frequency.label }}</option> }</select></label><label class="field-label" for="duration">Quantidade de ocorrências<input id="duration" name="duration" class="field-input" type="number" min="1" [max]="recurrenceMaximum" step="1" [(ngModel)]="recurrenceDuration"><span class="field-hint">Máximo {{ recurrenceMaximum }} para esta frequência</span></label></div> }
+          <div class="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"><button class="button-secondary" type="button" (click)="cancel()">Cancelar</button><button class="button-primary" type="submit" [disabled]="submitting() || !title.trim() || !description.trim()">{{ submitting() ? 'Salvando…' : editingTodo() ? 'Salvar alterações' : 'Criar tarefa' }}</button></div>
+        </form>
+      }
+    </section>
+  </div>
+</main>

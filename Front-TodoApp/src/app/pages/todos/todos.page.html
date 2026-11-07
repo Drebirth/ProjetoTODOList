@@ -1,0 +1,72 @@
+  <div class="app-shell min-h-screen md:flex">
+    <aside class="sidebar hidden w-72 shrink-0 flex-col justify-between border-r border-slate-200 bg-white p-6 md:flex">
+      <div>
+        <div class="brand-lockup mb-10"><div><strong>Foco</strong><small>Tarefas &amp; Metas</small></div></div>
+        <button type="button" class="button-primary mb-9 w-full" (click)="createTodo()"> Nova tarefa</button>
+        <p class="eyebrow mb-3 px-3">MINHAS TAREFAS</p>
+        <nav class="space-y-1" aria-label="Filtros de tarefas">
+          <button type="button" class="nav-item" [class.nav-active]="filter() === 'all'" (click)="setFilter('all')"> Todas <span class="nav-count">{{ todos().length }}</span></button>
+          <button type="button" class="nav-item" [class.nav-active]="filter() === 'open'" (click)="setFilter('open')"> Em aberto <span class="nav-count">{{ openCount() }}</span></button>
+          <button type="button" class="nav-item" [class.nav-active]="filter() === 'completed'" (click)="setFilter('completed')"> Concluídas <span class="nav-count">{{ completedCount() }}</span></button>
+          <button type="button" class="nav-item" (click)="openCategories()"> Categorias <span class="nav-count">{{ categories().length }}</span></button>
+        </nav>
+      </div>
+      <div class="flex items-center justify-between border-t border-slate-200 pt-5"><div class="flex min-w-0 items-center gap-3"><span class="avatar">F</span><div class="min-w-0"><p class="truncate text-sm font-semibold text-slate-800">Minha conta</p><span class="text-xs text-slate-500">{{ preference().timeZoneId }}</span></div></div><div class="flex"><button type="button" class="text-action" (click)="openSettings()">Preferências</button><button type="button" class="text-action" (click)="logout()">Sair</button></div></div>
+    </aside>
+    <main class="min-w-0 flex-1 pb-24 md:pb-0">
+      <header class="topbar sticky top-0 z-10 flex flex-wrap items-center justify-between gap-y-3 border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
+        <div class="flex items-center gap-3"><div><p class="eyebrow hidden sm:block">SUA ROTINA, COM MAIS LEVEZA</p><h1 class="text-xl font-bold text-slate-900 sm:text-2xl">Minhas tarefas</h1></div></div>
+        <div class="flex w-full items-center justify-end gap-1 md:hidden"><button type="button" class="text-action" (click)="openCategories()">Categorias</button><button type="button" class="text-action" (click)="openSettings()">Preferências</button><button type="button" class="text-action" (click)="logout()">Sair</button></div>
+        <div class="hidden items-center gap-2 md:flex"><button type="button" class="button-secondary" (click)="openCategories()"> Categorias</button><button type="button" class="button-primary" (click)="createTodo()"> Nova tarefa</button></div>
+      </header>
+      <section class="mx-auto max-w-5xl px-4 py-7 sm:px-8 sm:py-10">
+        <div class="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p class="text-sm text-slate-500">Um passo de cada vez.</p><h2 class="mt-1 text-2xl font-bold text-slate-900">{{ filter() === 'completed' ? 'Tarefas concluídas' : filter() === 'open' ? 'Em aberto' : 'Sua lista' }}</h2></div><div class="hidden rounded-xl bg-white px-4 py-3 text-sm shadow-sm sm:block"><span class="font-semibold text-primary">{{ completedCount() }}</span><span class="text-slate-500"> de {{ todos().length }} concluídas</span></div></div>
+        <div class="filter-pills mb-5 flex gap-2 overflow-x-auto md:hidden" role="group" aria-label="Filtrar tarefas">
+          <button class="filter-pill" [class.filter-selected]="filter() === 'all'" (click)="setFilter('all')">Todas <span>{{ todos().length }}</span></button>
+          <button class="filter-pill" [class.filter-selected]="filter() === 'open'" (click)="setFilter('open')">Em aberto <span>{{ openCount() }}</span></button>
+          <button class="filter-pill" [class.filter-selected]="filter() === 'completed'" (click)="setFilter('completed')">Concluídas <span>{{ completedCount() }}</span></button>
+        </div>
+        @if (categories().length > 0) { <label class="category-filter mb-5 flex items-center gap-2 text-xs text-slate-500">Categoria <select name="categoryFilter" class="category-filter-select" [ngModel]="categoryFilterId()" (ngModelChange)="setCategoryFilter($event)"><option [ngValue]="'all'">Todas</option>@for (category of categories(); track category.id) { <option [ngValue]="category.id">{{ category.nome }}</option> }</select><span class="text-[11px]">filtro aplicado aos itens carregados</span></label> }
+        @if (preferenceError()) { <div class="error-banner mb-5" role="alert"><span>{{ preferenceError() }}</span><button type="button" class="ml-auto font-semibold underline" (click)="loadWorkspace()">Tentar novamente</button></div> }
+        @if (routeWarning()) { <div class="notice mb-5" role="alert"><span>{{ routeWarning() }}</span><button type="button" class="ml-auto font-semibold underline" (click)="dismissRouteWarning()">Dispensar</button></div> }
+        @if (pageError()) { <div class="error-banner mb-5" role="alert"><span>{{ pageError() }}</span><button type="button" class="ml-auto font-semibold underline" (click)="loadTodos()">Tentar novamente</button></div> }
+        @if (loading()) {
+          <div class="state-card" role="status"><p>Carregando suas tarefas…</p></div>
+        } @else if (visibleTodos().length === 0 && !pageError()) {
+          <div class="state-card"><h3>{{ filter() === 'completed' ? 'Nada concluído por aqui' : filter() === 'open' ? 'Tudo em dia!' : 'Sua lista começa aqui' }}</h3><p>{{ filter() === 'completed' ? 'As tarefas que você concluir aparecerão aqui.' : filter() === 'open' ? 'Você concluiu todas as tarefas. Bom trabalho!' : 'Adicione uma tarefa e organize seu próximo passo.' }}</p>@if (filter() === 'all') { <button class="button-primary mt-4" type="button" (click)="createTodo()"> Criar primeira tarefa</button> }</div>
+        } @else {
+          <div class="task-list">@for (todo of visibleTodos(); track todo.id) {
+            <article class="task-card group">
+              <button type="button" class="status-action" [class.check-done]="todo.concluido" (click)="toggleCompleted(todo)">{{ todo.concluido ? 'Reabrir' : 'Concluir' }}</button>
+              <div class="min-w-0 flex-1"><div class="flex flex-wrap items-center gap-2"><p class="task-description" [class.task-completed]="todo.concluido">{{ todo.titulo }}</p><span class="priority-badge" [class.priority-high]="todo.prioridade === 'Alta'" [class.priority-low]="todo.prioridade === 'Baixa'">{{ todo.prioridade === 'Media' ? 'Média' : todo.prioridade }}</span></div><p class="task-detail" [class.task-completed]="todo.concluido">{{ todo.descricao }}</p><div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500"><span> Criada em {{ formatCreatedAt(todo.dataCriacao) }}</span>@if (formatScheduledWindow(todo); as scheduledWindow) { <span class="schedule-badge"> {{ scheduledWindow }} · {{ preference().timeZoneId }}</span> }@if (categoryNameFor(todo); as resolvedCategoryName) { <span class="category-badge"> {{ resolvedCategoryName }}</span> }@if (todo.frequenciaRecorrencia) { <span class="recurrence-badge"> {{ todo.frequenciaRecorrencia }} · {{ todo.numeroOcorrencia }} de {{ todo.duracaoRecorrencia }}</span> }</div></div>
+              <div class="task-actions"><button type="button" class="text-action" (click)="editTodo(todo)">Editar</button><button type="button" class="text-action danger-hover" [disabled]="submitting()" (click)="deleteTodo(todo)">Excluir</button></div>
+            </article>
+          }</div>
+        }
+      </section>
+    </main>
+    <nav class="mobile-nav fixed inset-x-0 bottom-0 z-20 grid grid-cols-3 border-t border-slate-200 bg-white px-4 py-2 md:hidden" aria-label="Navegação de tarefas"><button type="button" [class.mobile-nav-active]="filter() === 'all'" (click)="setFilter('all')"><small>Todas</small></button><button type="button" class="mobile-add" (click)="createTodo()"><small>Nova tarefa</small></button><button type="button" [class.mobile-nav-active]="filter() === 'completed'" (click)="setFilter('completed')"><small>Concluídas</small></button></nav>
+    
+  </div>
+@if (categoryManagerOpen()) {
+  <div class="modal-backdrop" (click)="closeCategories()"><section class="category-panel" role="dialog" aria-modal="true" aria-labelledby="categories-title" (click)="$event.stopPropagation()">
+    <div class="modal-heading"><div><p class="eyebrow">ORGANIZE SUAS LISTAS</p><h2 id="categories-title">Categorias</h2></div><button class="text-action" type="button" (click)="closeCategories()">Fechar</button></div>
+    @if (categoryNotice()) { <p class="notice mb-4" role="status">{{ categoryNotice() }}</p> }
+    @if (categoryError()) { <p class="error-banner mb-4" role="alert">{{ categoryError() }}</p> }
+    <form class="category-form" (ngSubmit)="saveCategory()"><label class="field-label flex-1" for="categoryName">{{ editingCategory() ? 'Renomear categoria' : 'Nova categoria' }}<input id="categoryName" name="categoryName" [(ngModel)]="categoryName" required class="field-input" placeholder="Nome da categoria"></label><div class="flex gap-2"><button class="button-primary" type="submit" [disabled]="categorySubmitting() || !categoryName.trim()">{{ categorySubmitting() ? 'Salvando…' : editingCategory() ? 'Salvar' : 'Adicionar' }}</button>@if (editingCategory()) { <button class="button-secondary" type="button" (click)="resetCategoryForm()">Cancelar</button> }</div></form>
+    <div class="category-list" aria-live="polite">
+      @if (categoryLoading()) { <div class="state-card compact" role="status">Carregando categorias…</div> }
+      @else if (categories().length === 0) { <div class="state-card compact">Nenhuma categoria disponível.</div> }
+      @else { @for (category of categories(); track category.id) { <div class="category-row"><span class="category-dot"></span><span class="min-w-0 flex-1 truncate text-sm font-medium text-slate-700">{{ category.nome }}</span><button type="button" class="text-action" (click)="startCategoryEdit(category)">Renomear</button><button type="button" class="text-action danger-hover" [disabled]="categorySubmitting()" (click)="deleteCategory(category)">Excluir</button></div> } }
+    </div>
+  </section></div>
+}
+
+@if (settingsOpen()) {
+  <div class="modal-backdrop" (click)="closeSettings()"><section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" (click)="$event.stopPropagation()">
+    <div class="modal-heading"><div><p class="eyebrow">PREFERÊNCIAS DA CONTA</p><h2 id="settings-title">Fuso horário</h2></div><button class="text-action" type="button" (click)="closeSettings()">Fechar</button></div>
+    @if (settingsError()) { <p class="error-banner mb-4" role="alert">{{ settingsError() }}</p> }
+    <form class="preference-form" (ngSubmit)="savePreferences()"><label class="field-label" for="timeZoneId">Identificador IANA<input id="timeZoneId" name="timeZoneId" [(ngModel)]="preferenceTimeZoneId" required class="field-input" placeholder="America/Fortaleza"></label><p class="field-hint mt-2">Fuso atual: {{ preference().timeZoneId }}. Horários locais da agenda serão interpretados neste fuso.</p><div class="mt-6 flex justify-end gap-3"><button class="button-secondary" type="button" (click)="closeSettings()">Cancelar</button><button class="button-primary" type="submit" [disabled]="preferenceSaving() || !preferenceTimeZoneId.trim()">{{ preferenceSaving() ? 'Salvando…' : 'Salvar fuso' }}</button></div></form>
+  </section></div>
+}
+

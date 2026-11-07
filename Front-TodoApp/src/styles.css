@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+@import './app/app.css';
+
+@theme {
+  --color-primary: #c05621;
+  --color-primary-dark: #7b341e;
+  --color-primary-soft: #feebc8;
+  --color-secondary: #c53030;
+  --color-success: #2f855a;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+:root { color-scheme: light; font-family: 'Inter', sans-serif; background: #f7fafc; color: #1a202c; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+app-login-page, app-register-page, app-todos-page, app-todo-form-page { display: block; min-height: 100vh; }
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .65; }
